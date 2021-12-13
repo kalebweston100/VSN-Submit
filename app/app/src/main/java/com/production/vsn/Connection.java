@@ -47,6 +47,8 @@ public class Connection extends Thread {
         try {
             socketChannel.close();
             tunnel.close();
+            fromAndroid.close();
+            toAndroid.close();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -73,12 +75,10 @@ public class Connection extends Thread {
                 byteBuffer.limit(length);
                 socketChannel.write(byteBuffer);
                 byteBuffer.clear();
-                System.out.println("send bytes: " + length);
 
                 length = socketChannel.read(byteBuffer);
                 if (length > 1) {
                     toAndroid.write(byteBuffer.array(), 0, length);
-                    System.out.println("receive bytes: " + length);
                 }
                 byteBuffer.clear();
             }

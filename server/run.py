@@ -5,7 +5,7 @@ from scapy.supersocket import L3RawSocket
 
 SERVER_IP = '10.0.0.164'
 INTERFACE_IP = '192.168.2.2'
-PORT = 8000
+PORT = 80
 
 async def main(server_ip, port, interface_ip):
     supersock = L3RawSocket()

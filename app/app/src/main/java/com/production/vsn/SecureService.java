@@ -20,6 +20,13 @@ public class SecureService extends VpnService {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        connection.stopConnection();
+        connection.disconnect();
+    }
+
+    @Override
     public void onRevoke() {
         super.onRevoke();
         connection.stopConnection();
@@ -38,9 +45,8 @@ public class SecureService extends VpnService {
     }
 
     private void connect() {
-        String serverAddress = "10.0.0.223";
+        String serverAddress = "10.0.0.182";
         int port = 80;
-        //connection = new Connection(this, "34.216.163.171", 8000);
         connection = new Connection(this, serverAddress, port);
         connection.protect();
         VpnService.Builder builder = new VpnService.Builder();

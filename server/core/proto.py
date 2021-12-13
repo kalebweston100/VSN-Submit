@@ -4,7 +4,7 @@ from scapy.compat import raw
 
 class ServerProto(asyncio.BufferedProtocol):
 
-    DEFAULT_BUFFER = 2048
+    DEFAULT_BUFFER = 4096
 
     def __init__(self, server_ip, interface_ip, supersock, filter):
         self.server_ip = server_ip
@@ -16,19 +16,19 @@ class ServerProto(asyncio.BufferedProtocol):
         self.transport = transport
 
     def get_buffer(self, sizehint):
-        if sizehint == 0:
+        if sizehint == -1:
             self.buffer = bytearray(self.DEFAULT_BUFFER)
         else:
             self.buffer = bytearray(sizehint)
         return self.buffer
 
     def buffer_updated(self, nbytes):
-        packet = IP(self.buffer)
-        packet.show()
+        packet = IP(bytes(self.buffer[:nbytes]))
         if self.filter.outgoing(packet):
             response = self.supersock.sr1(self.prep_forward(packet))
+        else:
+            response = None
         if response:
-            response.show()
             self.transport.write(raw(self.prep_forward(response)))
         else:
             self.transport.write(b'0')
